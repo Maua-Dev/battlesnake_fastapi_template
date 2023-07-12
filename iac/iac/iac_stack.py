@@ -61,10 +61,12 @@ class IacStack(Stack):
         api = RestApi(self, self.project_name + "Api",
                         rest_api_name=self.project_name + "Api",
                         description=f"This is the {self.project_name} API",
-                        default_cors_preflight_options=Cors(
-                            allow_origins=Cors.ALL_ORIGINS,
-                            allow_methods=Cors.ALL_METHODS
-                        )
+                        default_cors_preflight_options=
+                                {
+                                    "allow_origins": Cors.ALL_ORIGINS,
+                                    "allow_methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+                                    "allow_headers": ["*"]
+                                },
                         )
         
         api.root.add_resource("{proxy+}").add_method(
