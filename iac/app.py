@@ -22,6 +22,6 @@ tags = {
     'owner': 'DevCommunity'
 }
 
-IacStack(app, project_name, env=cdk.Environment(account=aws_account_id, region=aws_region), tags=tags)
+IacStack(app, stack_name, env=cdk.Environment(account=aws_account_id, region=aws_region), tags=tags)
 
 app.synth()
