@@ -72,11 +72,9 @@ There you can find your API url. You can use this url to create your Battlesnake
 You can also find an user and password to access the AWS Console and view the logs of the lambda function to debug it.
 
 ![Outputs]()
-![LambdaLogs]()
 
-To login in the AWS Console, you need to go to the [AWS Console](https://aws.amazon.com/console/) and click in "Sign in to a different account". There you need to put the account id and the user and password from the outputs tab. After that you can click in the link to lambda console, and click monitor to find the logs.
+To login in the AWS Console, you need to go to the [AWS Console](https://aws.amazon.com/console/) and click in "Sign in to a different account". There you need to put the account id and the user and password from the outputs tab. On your login you are required to change your password, DON'T FORGET THE NEW ONE. After that you can click in the link to lambda console, and click monitor to find the logs.
 
-![Login]()
 ![LambdaConsole]()
 ![LambdaLogs]()
 
