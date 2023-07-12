@@ -8,6 +8,7 @@ from aws_cdk import (
     SecretValue
 )
 from constructs import Construct
+from aws_cdk.aws_apigateway import RestApi, Cors
 
 class IacStack(Stack):
 
@@ -57,8 +58,23 @@ class IacStack(Stack):
             iam.ManagedPolicy.from_aws_managed_policy_name("IAMUserChangePassword")
         )
 
+        api = RestApi(self, self.project_name + "Api",
+                        rest_api_name=self.project_name + "Api",
+                        description=f"This is the {self.project_name} API",
+                        default_cors_preflight_options=Cors(
+                            allow_origins=Cors.ALL_ORIGINS,
+                            allow_methods=Cors.ALL_METHODS
+                        )
+                        )
+        
+        api.root.add_resource("{proxy+}").add_method(
+            "ANY",
+            _lambda.LambdaIntegration(lambda_fn)
+        )
+        
+
         CfnOutput(self, self.project_name + "Url",
-                  value=lambda_url.url,
+                  value=api.url,
                   export_name= self.project_name + 'UrlValue')    
 
         CfnOutput(self, self.project_name + "UserOutput",
