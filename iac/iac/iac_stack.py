@@ -27,11 +27,12 @@ class IacStack(Stack):
             auth_type=_lambda.FunctionUrlAuthType.NONE,
         )
 
+        password = project_name + "UserPassword7@"
 
         user = iam.User(self, project_name + "User",
                         user_name=project_name + "User",
                         password_reset_required=True,
-                        password=SecretValue.unsafe_plain_text(project_name + "UserPassword7@")
+                        password=SecretValue.unsafe_plain_text(password)
                         )
 
         policy = iam.Policy(self, "Policy", statements=[
@@ -50,6 +51,9 @@ class IacStack(Stack):
 
         policy.attach_to_user(user)
 
+        user.add_managed_policy(
+            iam.ManagedPolicy.from_aws_managed_policy_name("IAMUserChangePassword")
+        )
 
         CfnOutput(self, project_name + "Url",
                   value=lambda_url.url,
@@ -61,7 +65,7 @@ class IacStack(Stack):
                   )
 
         CfnOutput(self, project_name + "FirstTimeUserPassword",
-                  value=user.user_name,
+                  value=password,
                   export_name= project_name + 'FirstTimeUserPasswordValue'
                   )    
         
