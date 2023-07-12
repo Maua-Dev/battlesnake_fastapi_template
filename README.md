@@ -103,6 +103,7 @@ This project was developed to use inside Dev. Community Mauá, but feel free to 
 - Hector Guerrini - [hectorguerrini](https://github.com/hectorguerrini) 🧙‍♂️
 - João Branco - [JoaoVitorBranco](https://github.com/JoaoVitorBranco) 😎
 - Vitor Soller - [VgsStudio](https://github.com/VgsStudio) 🌞
+- Luigi Trevisan - [LuigiTrevisan](https://github.com/LuigiTrevisan) 🔙 
 
 ## Contact us 📞
 If you have any questions, feel free to contact us! You can find us in our [Discord](https://discord.gg/Yr2VPgAmcb) server.
