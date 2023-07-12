@@ -1,3 +1,4 @@
+import os
 from aws_cdk import (
     Stack,
     aws_lambda as _lambda,
@@ -9,6 +10,8 @@ class IacStack(Stack):
 
     def __init__(self, scope: Construct, construct_id: str, **kwargs) -> None:
         super().__init__(scope, construct_id, **kwargs)
+
+        project_name = os.environ.get("PROJECT_NAME")
 
         lambda_fn = _lambda.Function(
             self,
@@ -22,26 +25,8 @@ class IacStack(Stack):
             auth_type=_lambda.FunctionUrlAuthType.NONE,
         )
 
-        CfnOutput(self, 'PythonLambdaUrl',
+        CfnOutput(self, project_name + "Url",
                   value=lambda_url.url,
-                  export_name='PythonLambdaUrlValue')        
+                  export_name= project_name + 'UrlValue')        
         
 
-
-# Resources:
-#   Function:
-#     Type: AWS::Serverless::Function
-#     Properties:
-#       FunctionName: 'FastAPILambda'
-#       CodeUri: src
-#       Handler: app.handler
-#       Runtime: python3.9
-#       Events:
-#         Api:
-#           Type: HttpApi
-#           Properties:
-#             ApiId: !Ref Api
- 
-#   Api:
-#     Type: AWS::Serverless::HttpApi
- 
