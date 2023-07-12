@@ -3,7 +3,8 @@ from aws_cdk import (
     Stack,
     aws_lambda as _lambda,
     CfnOutput, 
-    aws_iam as iam
+    aws_iam as iam,
+    SecretValue
 )
 from constructs import Construct
 
@@ -26,10 +27,11 @@ class IacStack(Stack):
             auth_type=_lambda.FunctionUrlAuthType.NONE,
         )
 
+
         user = iam.User(self, project_name + "User",
                         user_name=project_name + "User",
                         password_reset_required=True,
-                        password=project_name + "UserPassword"
+                        password=SecretValue.plain_text(project_name + "UserPassword")
                         )
 
         policy = iam.Policy(self, "Policy", statements=[
