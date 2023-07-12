@@ -71,7 +71,7 @@ class IacStack(Stack):
         
         api.root.add_resource("{proxy+}").add_method(
             "ANY",
-            _lambda_integration=lambda_fn,
+            lambda_fn,
         )
         
 
