@@ -1,0 +1,40 @@
+name: AWS DESTROY
+on:
+  workflow_dispatch:
+jobs:
+  DestroyAWS:
+    environment: 
+      name: ${{ github.ref_name }}
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+        - uses: actions/checkout@v3
+        - name: Setup AWS Credentials
+          uses: aws-actions/configure-aws-credentials@v2
+          with:
+            aws-region: sa-east-1
+            role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/GithubActionsRole
+            role-session-name: github-action
+        - name: Use Node.js 18.x
+          uses: actions/setup-node@v3
+          with:
+            node-version: 18.x
+        - name: Setting stage and stack name
+          run: |
+            echo "STAGE=${{ github.ref_name }}" 
+            PROJECT_NAME=$(echo ${{ github.event.repository.name }} | sed -e 's/[-_]/ /g' | awk '{for(i=1;i<=NF;i++)sub(/./,toupper(substr($i,1,1)),$i)}1' | sed -e 's/ //g')
+            echo "PROJECT_NAME=${PROJECT_NAME}"
+            echo "STACK_NAME=${PROJECT_NAME}StackBattlesnake${{github.ref_name}}"
+
+            echo "STACK_NAME=${PROJECT_NAME}StackBattlesnake${{github.ref_name}}" >> $GITHUB_ENV
+            echo "PROJECT_NAME=${PROJECT_NAME}Battlesnaket" >> $GITHUB_ENV
+        - name: Installing Dependencies
+          run: |
+            npm install -g aws-cdk
+            
+        - name: Destroying AWS
+          run: |
+            cd iac
+            cdk destroy -f ${{ env.STACK_NAME }}
