@@ -3,7 +3,7 @@
 This is a [Battlesnake](http://play.battlesnake.com) template written in Python using the [FastAPI](https://fastapi.tiangolo.com/) framework and deployed in AWS Lambda using [Magnum](https://mangum.io).
 
 ## Introduction and Objectives ⁉
-The main propose of this project is to create a template for Battlesnake using FastAPI and Magnum. The biggest challenge is to understand how an API works and how to deploy it in AWS Lambda.
+The main purpose of this project is to create a template for Battlesnake using FastAPI and Magnum. The biggest challenge is to understand how an API works and how to deploy it in AWS Lambda.
 
 ## How to use 🤔
 First of all, you need to create a repo using issues from [Devmaua setup](https://github.com/Maua-Dev/devmaua_setup/), set the **project_name** as "**battlesnake_{your name}**" and project template as **battlesnake_fastapi_template**. Hit create issue and wait for the setup to finish.
@@ -58,18 +58,18 @@ The tests folder contains the tests for the project. You can create your own tes
 The routes are created in the main.py file. You can create your own routes and functions. The routes are created using FastAPI decorators. You can find the documentation [here](https://fastapi.tiangolo.com/tutorial/first-steps/). You need to follow the rules from Battlesnake documentation to create your routes.
 
 ### Deploy 🚀
-After pushing your code to the repo, it will trigger a action to deploy your code in AWS Lambda. You can find the action in the **.github/workflows/aws_cd.yml**.
+After pushing your code to the repo, it will trigger an action to deploy your code in AWS Lambda. You can find the action in the **.github/workflows/aws_cd.yml** file.
 
 In the first time you push your code, the action will create a new stack in AWS CloudFormation. After that, every time you push your code, the action will update the stack with the new code.
 
-In the actions tab you can see the status of the deploy, and if it was successful or not. If it was successful, you can find the url of your API in the outputs tab of the action (in the final part of the "Deploy with CDK" step).
+In the [Actions](https://github.com/Maua-Dev/battlesnake_fastapi_template/actions) tab you can see the status of the deploy, and if it was successful or not. If it was successful, you can find the URL of your API in the outputs tab of the action (in the final part of the "Deploy with CDK" step).
 
 
 ![Action Tab](https://github.com/Maua-Dev/battlesnake_fastapi_template/assets/81604963/ca447b23-e4f3-423c-8ba2-3f7c891849c9)
 ![CD](https://github.com/Maua-Dev/battlesnake_fastapi_template/assets/81604963/1340c269-f182-46eb-ae12-1d0bdd6059a2)
 ![STEP](https://github.com/Maua-Dev/battlesnake_fastapi_template/assets/81604963/6129f465-a54d-46fc-b45a-c8b219a6823b)
 
-There you can find your API url. You can use this url to create your Battlesnake in the Battlesnake website. You can find the documentation [here](https://docs.battlesnake.com/guides/getting-started#step-2-create-a-battlesnake).
+There you can find your API URL. You can use this URL to create your Battlesnake in the Battlesnake website. You can find the documentation [here](https://docs.battlesnake.com/guides/getting-started#step-2-create-a-battlesnake).
 You can also find an user and password to access the AWS Console and view the logs of the lambda function to debug it.
 
 ![Outputs](https://github.com/Maua-Dev/battlesnake_fastapi_template/assets/81604963/e06bf1dd-18cc-4057-91ea-3ccd8074848f)
