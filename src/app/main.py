@@ -14,6 +14,7 @@ def read_item(item_id: int):
     return {"item_id": item_id}
 
 @app.post("/create_item/")
+@app.post("")
 def create_item(request: dict):
     item_id = request.get("item_id")
     name = request.get("name")
@@ -22,4 +23,4 @@ def create_item(request: dict):
             "name": name}   
 
 
-handler = Mangum(app, lifespan="off", api_gateway_base_path="prod")
+handler = Mangum(app, lifespan="off")
