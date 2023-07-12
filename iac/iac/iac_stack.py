@@ -18,7 +18,7 @@ class IacStack(Stack):
 
         lambda_fn = _lambda.Function(
             self,
-            "HelloHandler",
+            "BattleSnakeLambda",
             runtime=_lambda.Runtime.PYTHON_3_9,
             code=_lambda.Code.from_asset("../src"),
             handler="app.main.handler",
