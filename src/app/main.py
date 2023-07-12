@@ -13,8 +13,7 @@ def read_root():
 def read_item(item_id: int):
     return {"item_id": item_id}
 
-@app.post("/create_item/")
-@app.post("")
+@app.post("/create_item")
 def create_item(request: dict):
     item_id = request.get("item_id")
     name = request.get("name")
