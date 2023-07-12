@@ -7,4 +7,16 @@ on:
 
 jobs:
   testApp:
-    uses: maua-dev/ci_workflows_reusable/.github/workflows/pytest_ci.yml@V1.0
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: maua-dev/ci_workflows_reusable/.github/workflows/pytest_ci.yml@V1.0
+      - uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install -r requirements-dev.txt
+          flags: unittests
