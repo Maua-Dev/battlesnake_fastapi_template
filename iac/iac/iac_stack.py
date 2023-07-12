@@ -16,8 +16,6 @@ class IacStack(Stack):
 
         self.project_name = os.environ.get("PROJECT_NAME")
 
-        self.region = os.environ.get("AWS_REGION")
-
         lambda_fn = _lambda.Function(
             self,
             "HelloHandler",
