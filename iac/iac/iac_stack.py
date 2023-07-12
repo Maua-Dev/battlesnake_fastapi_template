@@ -31,7 +31,7 @@ class IacStack(Stack):
         user = iam.User(self, project_name + "User",
                         user_name=project_name + "User",
                         password_reset_required=True,
-                        password=SecretValue.plain_text(project_name + "UserPassword")
+                        password=SecretValue.unsafe_plain_text(project_name + "UserPassword7@")
                         )
 
         policy = iam.Policy(self, "Policy", statements=[
@@ -60,9 +60,9 @@ class IacStack(Stack):
                   export_name= project_name + 'UserValue'
                   )
 
-        CfnOutput(self, project_name + "UserPassword",
+        CfnOutput(self, project_name + "FirstTimeUserPassword",
                   value=user.user_name,
-                  export_name= project_name + 'UserPasswordValue'
+                  export_name= project_name + 'FirstTimeUserPasswordValue'
                   )    
         
 
