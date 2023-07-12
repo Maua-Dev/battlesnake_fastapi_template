@@ -58,21 +58,8 @@ class IacStack(Stack):
             iam.ManagedPolicy.from_aws_managed_policy_name("IAMUserChangePassword")
         )
 
-        api = RestApi(self, self.project_name + "Api",
-                        rest_api_name=self.project_name + "Api",
-                        description=f"This is the {self.project_name} API",
-                        default_cors_preflight_options=
-                                {
-                                    "allow_origins": Cors.ALL_ORIGINS,
-                                    "allow_methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-                                    "allow_headers": ["*"]
-                                },
-                        )
-
-        api.root.add_method("ANY", LambdaIntegration(lambda_fn))
-
         CfnOutput(self, self.project_name + "Url",
-                  value=api.url,
+                  value=lambda_fn.url,
                   export_name= self.project_name + 'UrlValue')    
 
         CfnOutput(self, self.project_name + "UserOutput",

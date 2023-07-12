@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from mangum import Mangum
 
-app = FastAPI(debug=True)
+app = FastAPI(debug)
 
 
 @app.get("/")
