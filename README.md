@@ -1,2 +1,100 @@
-# battlesnake_fastapi_template
-The objective here is to create a template for battlesnake game using python, fastapi and lambda.
+# battlesnake_fastapi_template 🐍
+
+This is a [Battlesnake](http://play.battlesnake.com) template written in Python using the [FastAPI](https://fastapi.tiangolo.com/) framework and deployed in AWS Lambda using [Magnum](https://mangum.io).
+
+## Introduction and Objectives ⁉
+The main propose of this project is to create a template for Battlesnake using FastAPI and Magnum. The biggest challenge is to understand how an API works and how to deploy it in AWS Lambda.
+
+## How to use 🤔
+First of all, you need to create a repo using issues from [Devmaua setup](https://github.com/Maua-Dev/devmaua_setup/), set the **project_name** as "**battlesnake_{your name}**" and project template as **battlesnake_fastapi_template**. Hit create issue and wait for the setup to finish.
+
+After that you need to clone your new repo, create a virtual environment and install the requirements.
+
+## Installation 👩‍💻
+
+### Create virtual ambient in python (only first time)
+
+###### Windows
+
+    python -m venv venv
+
+###### Linux
+
+    virtualenv -p python3.9 venv
+
+#### Activate the venv
+
+###### Windows:
+
+    venv\Scripts\activate
+
+###### Linux:
+
+    source venv/bin/activate
+
+#### Install the requirements
+
+    pip install -r requirements-dev.txt
+    pip install -r requirements.txt
+
+#### Run the tests
+
+    pytest
+
+#### Run the server local
+
+    uvicorn src.app.main:app
+
+## The Challenge 🐍
+The challenge is to create a Battlesnake using FastAPI and Magnum. The Battlesnake must be deployed in AWS Lambda.
+You can find the documentation for Battlesnake [here](https://docs.battlesnake.com/).
+
+### The files 📁
+The project is divided in 2 folders: **src** and **tests**.
+In src you can find the main.py file, which is the file that contains the FastAPI app and the routes. From there you can create your own routes and functions.
+The tests folder contains the tests for the project. You can create your own tests and run them using pytest.
+
+### The routes 🛣
+The routes are created in the main.py file. You can create your own routes and functions. The routes are created using FastAPI decorators. You can find the documentation [here](https://fastapi.tiangolo.com/tutorial/first-steps/). You need to follow the rules from Battlesnake documentation to create your routes.
+
+### Deploy 🚀
+After pushing your code to the repo, it will trigger a action to deploy your code in AWS Lambda. You can find the action in the **.github/workflows/aws_cd.yml**.
+
+In the first time you push your code, the action will create a new stack in AWS CloudFormation. After that, every time you push your code, the action will update the stack with the new code.
+
+In the actions tab you can see the status of the deploy, and if it was successful or not. If it was successful, you can find the url of your API in the outputs tab of the action (in the final part of the "Deploy with CDK" step).
+
+
+![ActionTab]()
+![Step]()
+
+There you can find your API url. You can use this url to create your Battlesnake in the Battlesnake website. You can find the documentation [here](https://docs.battlesnake.com/guides/getting-started#step-2-create-a-battlesnake).
+You can also find an user and password to access the AWS Console and view the logs of the lambda function to debug it.
+
+![Outputs]()
+![LambdaLogs]()
+
+To login in the AWS Console, you need to go to the [AWS Console](https://aws.amazon.com/console/) and click in "Sign in to a different account". There you need to put the account id and the user and password from the outputs tab. After that you can click in the link to lambda console, and click monitor to find the logs.
+
+![Login]()
+![LambdaConsole]()
+![LambdaLogs]()
+
+## Useful tools 🛠
+
+- [Postman](https://www.postman.com/) - API development environment
+- [FastAPI](https://fastapi.tiangolo.com/) - Web framework
+- [Python3.9](https://docs.python.org/3.9/) - Python Documentation
+- [Battlesnake](https://docs.battlesnake.com/) - Battlesnake Documentation
+
+## Contributors 💰🤝💰
+
+This project was developed to use inside Dev. Community Mauá, but feel free to help!.
+
+- Bruno Vilardi - [Brvilardi](https://github.com/Brvilardi) 👷‍♂️
+- Hector Guerrini - [hectorguerrini](https://github.com/hectorguerrini) 🧙‍♂️
+- João Branco - [JoaoVitorBranco](https://github.com/JoaoVitorBranco) 😎
+- Vitor Soller - [VgsStudio](https://github.com/VgsStudio) 🌞
+
+## Contact us 📞
+If you have any questions, feel free to contact us! You can find us in our [Discord](https://discord.gg/Yr2VPgAmcb) server.
