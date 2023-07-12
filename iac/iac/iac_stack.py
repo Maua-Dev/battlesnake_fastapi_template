@@ -8,7 +8,7 @@ from aws_cdk import (
     SecretValue
 )
 from constructs import Construct
-from aws_cdk.aws_apigateway import RestApi, Cors
+from aws_cdk.aws_apigateway import RestApi, Cors, LambdaIntegration
 
 class IacStack(Stack):
 
@@ -68,11 +68,8 @@ class IacStack(Stack):
                                     "allow_headers": ["*"]
                                 },
                         )
-        
-        api.root.add_resource("{proxy+}").add_method(
-            "ANY",
-            lambda_fn,
-        )
+
+        api.root.add_method("ANY", LambdaIntegration(lambda_fn))
         
 
         CfnOutput(self, self.project_name + "Url",
