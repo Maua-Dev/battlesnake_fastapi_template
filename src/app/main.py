@@ -19,7 +19,7 @@ def create_item(request: dict):
     name = request.get("name")
 
     return {"item_id": item_id,
-            "name": name}
+            "name": name}   
 
 
 handler = Mangum(app, lifespan="off", api_gateway_base_path="/prod")

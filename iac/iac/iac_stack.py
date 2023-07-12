@@ -70,7 +70,6 @@ class IacStack(Stack):
                         )
 
         api.root.add_method("ANY", LambdaIntegration(lambda_fn))
-        
 
         CfnOutput(self, self.project_name + "Url",
                   value=api.url,
