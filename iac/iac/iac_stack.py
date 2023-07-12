@@ -26,8 +26,8 @@ class IacStack(Stack):
             auth_type=_lambda.FunctionUrlAuthType.NONE,
         )
 
-        user = iam.User(self, "User",
-                        user_name=project_name + "User"
+        user = iam.User(self, project_name + "User",
+                        user_name=project_name + "User",
                         password_reset_required=True,
                         password=project_name + "UserPassword"
                         )
