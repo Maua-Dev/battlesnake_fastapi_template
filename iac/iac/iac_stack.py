@@ -55,7 +55,7 @@ class IacStack(Stack):
                   value=lambda_url.url,
                   export_name= project_name + 'UrlValue')    
 
-        CfnOutput(self, project_name + "User",
+        CfnOutput(self, project_name + "UserOutput",
                   value=user.user_name,
                   export_name= project_name + 'UserValue'
                   )
