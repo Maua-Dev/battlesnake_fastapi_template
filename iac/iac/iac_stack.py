@@ -1,5 +1,6 @@
 import os
 from aws_cdk import (
+    Duration,
     Stack,
     aws_lambda as _lambda,
     CfnOutput, 
@@ -13,24 +14,27 @@ class IacStack(Stack):
     def __init__(self, scope: Construct, construct_id: str, **kwargs) -> None:
         super().__init__(scope, construct_id, **kwargs)
 
-        project_name = os.environ.get("PROJECT_NAME")
+        self.project_name = os.environ.get("PROJECT_NAME")
+
+        self.region = os.environ.get("AWS_REGION")
 
         lambda_fn = _lambda.Function(
             self,
             "HelloHandler",
-            runtime=_lambda.Runtime.PYTHON_3_8,
+            runtime=_lambda.Runtime.PYTHON_3_9,
             code=_lambda.Code.from_asset("../src"),
             handler="app.main.handler",
+            timeout=Duration.seconds(15),
         )
 
         lambda_url = lambda_fn.add_function_url(
             auth_type=_lambda.FunctionUrlAuthType.NONE,
         )
 
-        password = project_name + "UserPassword7@"
+        password = self.project_name + "UserPassword7@"
 
-        user = iam.User(self, project_name + "User",
-                        user_name=project_name + "User",
+        user = iam.User(self, self.project_name + "User",
+                        user_name=self.project_name + "User",
                         password_reset_required=True,
                         password=SecretValue.unsafe_plain_text(password)
                         )
@@ -55,18 +59,23 @@ class IacStack(Stack):
             iam.ManagedPolicy.from_aws_managed_policy_name("IAMUserChangePassword")
         )
 
-        CfnOutput(self, project_name + "Url",
+        CfnOutput(self, self.project_name + "Url",
                   value=lambda_url.url,
-                  export_name= project_name + 'UrlValue')    
+                  export_name= self.project_name + 'UrlValue')    
 
-        CfnOutput(self, project_name + "UserOutput",
+        CfnOutput(self, self.project_name + "UserOutput",
                   value=user.user_name,
-                  export_name= project_name + 'UserValue'
+                  export_name= self.project_name + 'UserValue'
                   )
 
-        CfnOutput(self, project_name + "FirstTimeUserPassword",
+        CfnOutput(self, self.project_name + "FirstTimeUserPassword",
                   value=password,
-                  export_name= project_name + 'FirstTimeUserPasswordValue'
+                  export_name= self.project_name + 'FirstTimeUserPasswordValue'
                   )    
+        
+        CfnOutput(self, self.project_name + "LambdaConsole",
+                    value="https://" + self.region + ".console.aws.amazon.com/lambda/home?region=" + self.region + "#/functions/" + lambda_fn.function_name + "?tab=code",
+                    export_name= self.project_name + 'LambdaConsoleValue'
+                    )
         
 
