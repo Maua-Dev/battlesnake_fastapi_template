@@ -22,4 +22,4 @@ def create_item(request: dict):
             "name": name}
 
 
-handler = Mangum(app, lifespan="off")
+handler = Mangum(app, lifespan="off", api_gateway_base_path="/prod")
