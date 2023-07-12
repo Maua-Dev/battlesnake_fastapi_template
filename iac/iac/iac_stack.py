@@ -39,6 +39,13 @@ class IacStack(Stack):
             )
         ])
 
+        policy.add_statements(
+            iam.PolicyStatement(
+                actions=["logs:*"],
+                resources=["arn:aws:logs:*:*:*"]
+            )
+        )
+
         policy.attach_to_user(user)
 
 
@@ -56,4 +63,4 @@ class IacStack(Stack):
                   export_name= project_name + 'UserPasswordValue'
                   )    
         
-        
+
