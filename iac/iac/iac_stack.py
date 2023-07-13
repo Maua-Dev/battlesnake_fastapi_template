@@ -20,6 +20,7 @@ class IacStack(Stack):
         super().__init__(scope, construct_id, **kwargs)
 
         self.project_name = os.environ.get("PROJECT_NAME")
+        self.aws_account_id = os.environ.get("AWS_ACCOUNT_ID")
 
         lambda_fn = _lambda.Function(
             self,
