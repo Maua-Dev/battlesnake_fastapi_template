@@ -1,12 +1,12 @@
 # battlesnake_fastapi_template 🐍
 
-This is a [Battlesnake](http://play.battlesnake.com) template written in Python using the [FastAPI](https://fastapi.tiangolo.com/) framework and deployed in AWS Lambda using [Magnum](https://mangum.io).
+This is a [Battlesnake](http://play.battlesnake.com) template written in Python using the [FastAPI](https://fastapi.tiangolo.com/) framework and deployed in AWS Lambda using [Mangum](https://mangum.io).
 
 ## Introduction and Objectives ⁉
-The main purpose of this project is to create a template for Battlesnake using FastAPI and Magnum. The biggest challenge is to understand how an API works and how to deploy it in AWS Lambda.
+The main purpose of this project is to create a template for Battlesnake using FastAPI and Mangum. The biggest challenge is to understand how an API works and how to deploy it in AWS Lambda.
 
 ## How to use 🤔
-First of all, you need to create a repo using issues from [Devmaua setup](https://github.com/Maua-Dev/devmaua_setup/), set the **project_name** as "**battlesnake_{your name}**" and project template as **battlesnake_fastapi_template**. Hit create issue and wait for the setup to finish.
+First of all, you need to create a repo using issues from [Devmaua setup](https://github.com/Maua-Dev/devmaua_setup/), set the **project_name** as "**battlesnake_{your name}**" and project template as **battlesnake_fastapi_template** and make sure it's **public** . Hit create issue and wait for the setup to finish.
 
 After that you need to clone your new repo, create a virtual environment and install the requirements.
 
@@ -46,7 +46,7 @@ After that you need to clone your new repo, create a virtual environment and ins
     uvicorn src.app.main:app
 
 ## The Challenge 🐍
-The challenge is to create a Battlesnake using FastAPI and Magnum. The Battlesnake must be deployed in AWS Lambda.
+The challenge is to create a Battlesnake using FastAPI and Mangum. The Battlesnake must be deployed in AWS Lambda.
 You can find the documentation for Battlesnake [here](https://docs.battlesnake.com/).
 
 ### The files 📁
@@ -56,6 +56,13 @@ The tests folder contains the tests for the project. You can create your own tes
 
 ### The routes 🛣
 The routes are created in the main.py file. You can create your own routes and functions. The routes are created using FastAPI decorators. You can find the documentation [here](https://fastapi.tiangolo.com/tutorial/first-steps/). You need to follow the rules from Battlesnake documentation to create your routes.
+
+### Atention 🚨
+In order to deploy your Battlesnake in AWS Lambda, you need to follow some rules:
+- The routes must be created using FastAPI decorators.
+- Don't use complete import, only relative ones. (eg: from .move_function import move)
+- ALWAYS test your code before pushing it to the repo. You can use pytest to test your code.
+- Don't forget to create your own tests.
 
 ### Deploy 🚀
 After pushing your code to the repo, it will trigger an action to deploy your code in AWS Lambda. You can find the action in the **.github/workflows/aws_cd.yml** file.
