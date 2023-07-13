@@ -48,7 +48,7 @@ jobs:
 
         - name: Setup envs
           run: |
-            echo AWS_REGION=sa-east-1 >> $GITHUB_ENV
+            echo AWS_REGION=us-west-2 >> $GITHUB_ENV
             echo AWS_ACCOUNT_ID=${{ secrets.AWS_ACCOUNT_ID }} >> $GITHUB_ENV
             echo GITHUB_REF_NAME=${{ github.ref_name }} >> $GITHUB_ENV
 
