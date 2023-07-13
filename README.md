@@ -55,7 +55,7 @@ In src you can find the main.py file, which is the file that contains the FastAP
 The tests folder contains the tests for the project. You can create your own tests and run them using pytest.
 
 ### The routes 🛣
-The routes are created in the main.py file. You can create your own routes and functions. The routes are created using FastAPI decorators. You can find the documentation [here](https://fastapi.tiangolo.com/tutorial/first-steps/). You need to follow the rules from Battlesnake documentation to create your routes.
+The routes are created in **main.py** file. You can create your own routes and functions. The routes are created using FastAPI decorators, you can find the documentation [here](https://fastapi.tiangolo.com/tutorial/first-steps/). Follow the rules from Battlesnake documentation to create your routes, they should look like [this](https://docs.battlesnake.com/api).
 
 ### Atention 🚨
 In order to deploy your Battlesnake in AWS Lambda, you need to follow some rules:
