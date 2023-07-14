@@ -41,4 +41,4 @@ jobs:
         - name: Destroying AWS
           run: |
             cd iac
-            cdk destroy -f ${{ env.STACK_NAME }}
+            cdk destroy --require-approval never 
