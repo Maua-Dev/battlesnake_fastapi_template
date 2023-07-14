@@ -41,4 +41,4 @@ jobs:
         - name: Destroying AWS
           run: |
             cd iac
-            cdk destroy --require-approval never 
+            cdk destroy --force
