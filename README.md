@@ -59,12 +59,16 @@ The routes are created in **main.py** file. You can create your own routes and f
 
 ### Atention 🚨
 In order to deploy your Battlesnake in AWS Lambda, you need to follow some rules:
-- The routes must be created using FastAPI decorators.
-- Don't use complete import, only relative ones. (eg: from .move_function import move)
-- ALWAYS test your code before pushing it to the repo. You can use pytest to test your code.
-- Don't forget to create your own tests.
+- The routes must be created using FastAPI decorators;
+- Don't use complete import, only relative ones. (eg: from .move_function import move);
+- ALWAYS test your code before pushing it to the repo. You can use pytest to test your code;
+- Don't forget to create your own tests;
+- Make sure there is a __init__.py file each directory, otherwise it's not a Python package; 
 
 ### Deploy 🚀
+
+![AWS](https://github.com/Maua-Dev/battlesnake_fastapi_template/assets/81604963/78dfacc2-a7d1-498a-8d30-2c236140a723)
+
 After pushing your code to the repo, it will trigger an action to deploy your code in AWS Lambda. You can find the action in the **.github/workflows/aws_cd.yml** file.
 
 In the first time you push your code, the action will create a new stack in AWS CloudFormation. After that, every time you push your code, the action will update the stack with the new code.
