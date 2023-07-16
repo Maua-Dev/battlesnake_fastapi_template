@@ -67,7 +67,8 @@ In order to deploy your Battlesnake in AWS Lambda, you need to follow some rules
 
 ### Deploy 🚀
 
-![AWS](https://github.com/Maua-Dev/battlesnake_fastapi_template/assets/81604963/78dfacc2-a7d1-498a-8d30-2c236140a723)
+![FastApi AWS drawio](https://github.com/Maua-Dev/battlesnake_fastapi_template/assets/81604963/68026cf1-14de-4ca9-bd50-61688556b581)
+
 
 After pushing your code to the repo, it will trigger an action to deploy your code in AWS Lambda. You can find the action in the **.github/workflows/aws_cd.yml** file.
 
