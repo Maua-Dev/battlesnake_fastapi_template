@@ -5,7 +5,7 @@ This is a [Battlesnake](http://play.battlesnake.com) template written in Python 
 ## Introduction and Objectives ⁉
 The main purpose of this project is to create a template for Battlesnake using FastAPI and Mangum. The biggest challenge is to understand how an API works and how to deploy it in AWS Lambda.
 
-https://github.com/Maua-Dev/battlesnake_fastapi_template/assets/81604963/c8bfd632-f63a-4be0-bc01-258ed9e25af8
+![Example](https://github.com/Maua-Dev/battlesnake_fastapi_template/assets/81604963/58080c12-6d91-4366-b4e0-f7cd9f20f98d)
 
 ## How to use 🤔
 First of all, you need to create a repo using issues from [Devmaua setup](https://github.com/Maua-Dev/devmaua_setup/), set the **project_name** as "**battlesnake_{your name}**" and project template as **battlesnake_fastapi_template** and make sure it's **public** . Hit create issue and wait for the setup to finish.
