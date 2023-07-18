@@ -66,7 +66,7 @@ In order to deploy your Battlesnake in AWS Lambda, you need to follow some rules
 - ALWAYS test your code before pushing it to the repo. You can use pytest to test your code;
 - Don't forget to create your own tests;
 - Make sure there is a __init__.py file each directory, otherwise it's not a Python package;
-- Every file should me inside the app folder;
+- Every file should be inside the app folder;
 
 ### Deploy 🚀
 
