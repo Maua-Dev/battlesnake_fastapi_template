@@ -30,7 +30,7 @@ jobs:
             echo "STACK_NAME=${PROJECT_NAME}StackBattlesnake${{github.ref_name}}"
 
             echo "STACK_NAME=${PROJECT_NAME}StackBattlesnake${{github.ref_name}}" >> $GITHUB_ENV
-            echo "PROJECT_NAME=${PROJECT_NAME}Battlesnaket" >> $GITHUB_ENV
+            echo "PROJECT_NAME=${PROJECT_NAME}Battlesnake" >> $GITHUB_ENV
         
         - name: Installing Dependencies to Destroy
           run: |
