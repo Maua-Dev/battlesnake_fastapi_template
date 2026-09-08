@@ -1,0 +1,179 @@
+name: Tests and Deploy
+
+on:
+  push:
+    branches:
+      - '**'
+
+jobs:
+
+  ExecuteTests:
+    name: ExecuteTests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run Tests
+        run: pytest
+
+  BootstrapBucketCreation:
+    name: Bootstrap
+    runs-on: ubuntu-latest
+    needs: ExecuteTests
+    if: github.ref_name == 'dev'
+    permissions:
+      id-token: write
+      contents: read
+
+    outputs:
+      s3_bucket_name: ${{ steps.bootstrap.outputs.s3_bucket_name }}
+      dynamo_table_name: ${{ steps.bootstrap.outputs.dynamo_table_name }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: 'us-east-1'
+          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID_DEV }}:role/GithubActionsRole
+          role-session-name: github-action-terraform-deploy
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.6.6
+          cli_config_credentials_token: ${{ secrets.TFE_API_TOKEN }}
+
+      - name: Bootstrap S3 State Bucket
+        id: bootstrap
+        shell: bash
+        working-directory: ./terraform/bootstrap
+        run: |
+          WORKSPACE_NAME="${{ github.event.repository.name }}"
+          echo "Workspace: $WORKSPACE_NAME"
+
+          # Key própria do template de Python, para não colidir com os outros.
+          BOOTSTRAP_TERRAFORM_KEY="bootstrap-python/terraform.tfstate"
+          echo "Key do bucket: $BOOTSTRAP_TERRAFORM_KEY"
+
+          terraform init -backend-config="key=$BOOTSTRAP_TERRAFORM_KEY"
+
+          terraform apply -auto-approve -var="project_name=$WORKSPACE_NAME"
+
+          echo "s3_bucket_name=$(terraform output -raw s3_bucket_name)" >> $GITHUB_OUTPUT
+          echo "dynamo_table_name=$(terraform output -raw dynamodb_table_name)" >> $GITHUB_OUTPUT
+
+  build_python:
+    name: Build Python Application
+    runs-on: ubuntu-latest
+    needs: BootstrapBucketCreation
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+
+      - name: Install dependencies for the Lambda package
+        run: |
+          # A Lambda roda em arm64, mas este runner é x86_64. Sem os alvos
+          # abaixo o pip baixaria wheels x86_64 e o pydantic-core (extensão
+          # compilada) daria ImportError na AWS, derrubando a função.
+          pip install \
+            --target build/package \
+            --platform manylinux2014_aarch64 \
+            --implementation cp \
+            --python-version 3.12 \
+            --only-binary=:all: \
+            -r requirements.txt
+
+      - name: Package as Lambda artifact
+        run: |
+          cp -r src build/package/src
+          cd build/package && zip -qr ../battlesnake.zip .
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: battlesnake-lambda-zip
+          path: build/battlesnake.zip
+
+  deploy_app:
+    name: 'Deploy | Deploy Application'
+    runs-on: ubuntu-latest
+    needs: [BootstrapBucketCreation, build_python]
+
+    permissions:
+      id-token: write
+      contents: read
+
+    defaults:
+      run:
+        working-directory: ./terraform/app
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download Lambda artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: battlesnake-lambda-zip
+          path: build
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: 'us-east-1'
+          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID_DEV }}:role/GithubActionsRole
+          role-session-name: github-action-terraform-deploy
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.6.6
+          cli_config_credentials_token: ${{ secrets.TFE_API_TOKEN }}
+
+      - name: Terraform Init with Dynamic Backend
+        run: |
+          WORKSPACE_NAME="${{ github.event.repository.name }}"
+          APP_TERRAFORM_KEY="app/${WORKSPACE_NAME}/terraform.tfstate"
+          echo "Key do bucket: $APP_TERRAFORM_KEY"
+
+          terraform init \
+            -backend-config="bucket=${{ needs.BootstrapBucketCreation.outputs.s3_bucket_name }}" \
+            -backend-config="dynamodb_table=${{ needs.BootstrapBucketCreation.outputs.dynamo_table_name }}" \
+            -backend-config="key=$APP_TERRAFORM_KEY"
+
+      - name: Terraform Apply
+        run: |
+          terraform apply -auto-approve \
+            -var="project_name=${{ github.event.repository.name }}" \
+            -var="environment=dev"
+
+      - name: Mostrar a URL da cobra
+        run: |
+          echo "### 🐍 A sua cobra está no ar!" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Cadastre esta URL no site do Battlesnake:" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "    $(terraform output -raw api_url_base)" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "[Ver os logs no CloudWatch]($(terraform output -raw cloudwatch_logs))" >> $GITHUB_STEP_SUMMARY
