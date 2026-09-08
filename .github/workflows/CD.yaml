@@ -79,7 +79,11 @@ jobs:
   build_python:
     name: Build Python Application
     runs-on: ubuntu-latest
-    needs: BootstrapBucketCreation
+    # Depende só dos testes, e não do Bootstrap: empacotar não precisa de AWS.
+    # Assim a instalação das dependências para arm64 é validada em TODA branch,
+    # e não apenas no push para a dev. Um wheel aarch64 faltando aparece antes
+    # de qualquer recurso ser criado na AWS, e não depois do bucket já existir.
+    needs: ExecuteTests
 
     steps:
       - name: Checkout repository
