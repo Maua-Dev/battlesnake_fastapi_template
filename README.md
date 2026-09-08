@@ -1,124 +1,212 @@
-# battlesnake_fastapi_template 🐍
+# 🐍 Battlesnake Python Template
 
-This is a [Battlesnake](http://play.battlesnake.com) template written in Python using the [FastAPI](https://fastapi.tiangolo.com/) framework and deployed in AWS Lambda using [Mangum](https://mangum.io).
+Template de [Battlesnake](https://play.battlesnake.com) em **Python**, com
+**FastAPI** rodando em **AWS Lambda** com **API Gateway**. O deploy é
+automático: você programa, dá push, e o GitHub Actions devolve a URL da sua cobra.
 
-## Introduction and Objectives ⁉
-The main purpose of this project is to create a template for Battlesnake using FastAPI and Mangum. The biggest challenge is to understand how an API works and how to deploy it in AWS Lambda.
+---
 
-![Example](https://github.com/Maua-Dev/battlesnake_fastapi_template/assets/81604963/58080c12-6d91-4366-b4e0-f7cd9f20f98d)
+## 📦 Pré-requisitos
 
-## How to use 🤔
-First of all, you need to create a repo using issues from [Devmaua setup](https://github.com/Maua-Dev/devmaua_setup/), set the **project_name** as "**battlesnake_{your name}**" and project template as **battlesnake_fastapi_template** and make sure it's **public** . Hit create issue and wait for the setup to finish.
+- **Python 3.12 ou superior** — [python.org/downloads](https://www.python.org/downloads/)
+  Confira com `python --version`.
+- Noções básicas de **Python**, **API** e **Lambda**
+- **Disposição, competitividade e força de vontade!**
 
-After that you need to clone your new repo, create a virtual environment and install the requirements.
+Você **não** precisa instalar Terraform nem AWS CLI: quem cuida do deploy é o CD.
 
-## Installation 👩‍💻
+---
 
-### Create virtual ambient in python (only first time)
+## 🚀 Como começar
 
-###### Windows
+1. Vá até o repositório [**devmaua_setup**](https://github.com/Maua-Dev/devmaua_setup),
+   abra uma **issue** e escolha:
+   - **project_name**: `battlesnake_python_{seu nome}`
+   - **project template**: `battlesnake_fastapi_template`
+   - marque o repositório como **público**
 
-    python -m venv venv
+2. Aguarde cerca de **1 minuto** e confira em
+   [Repositórios da organização](https://github.com/orgs/Maua-Dev/repositories).
 
-###### Linux
+3. Clone o repositório e prepare o ambiente:
+   ```bash
+   git clone https://github.com/Maua-Dev/Nome_Do_Seu_Repositorio
+   cd Nome_Do_Seu_Repositorio
+   ```
 
-    virtualenv -p python3.9 venv
+4. Crie o ambiente virtual (só na primeira vez):
 
-#### Activate the venv
+   **Windows**
+   ```bash
+   python -m venv venv
+   venv\Scripts\activate
+   ```
 
-###### Windows:
+   **Linux / Mac**
+   ```bash
+   python3 -m venv venv
+   source venv/bin/activate
+   ```
 
-    venv\Scripts\activate
+5. Instale as dependências:
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-###### Linux:
+6. Abra [`src/logic.py`](src/logic.py) e comece a programar sua cobra 🐍
 
-    source venv/bin/activate
+---
 
-#### Install the requirements
+## 📂 Estrutura do projeto
 
-    pip install -r requirements-dev.txt
-    pip install -r requirements.txt
+```
+.
+├── requirements.txt            # dependências
+├── src
+│   ├── logic.py                # 👈 É AQUI QUE VOCÊ PROGRAMA
+│   └── main.py                 # rotas FastAPI + handler da Lambda — não precisa mexer
+├── tests
+│   └── test_logic.py           # testes da sua lógica
+├── terraform
+│   ├── bootstrap/              # bucket de estado do Terraform
+│   └── app/                    # Lambda + API Gateway
+└── .github/workflows/CD.yaml   # testes + deploy automático
+```
 
-#### Run the tests
+**Você só precisa de `src/logic.py`.** Os outros arquivos existem para levar o
+estado do jogo até as suas quatro funções.
 
-    pytest
+---
 
-#### Run the server local
+## 🧠 As quatro funções
 
-    uvicorn src.app.main:app
+Todas ficam em `src/logic.py` e recebem o `game_state` — o dicionário com o JSON
+completo que o servidor do Battlesnake manda a cada requisição:
 
-## The Challenge 🐍
-The challenge is to create a Battlesnake using FastAPI and Mangum. The Battlesnake must be deployed in AWS Lambda.
-You can find the documentation for Battlesnake [here](https://docs.battlesnake.com/).
+| Função | Rota | Quando é chamada | O que devolve |
+|---|---|---|---|
+| `info()` | `GET /` | ao cadastrar a cobra e no início de cada partida | aparência (cor, cabeça, cauda) |
+| `start(game_state)` | `POST /start` | uma vez, no começo da partida | nada |
+| `move(game_state)` | `POST /move` | **a cada turno** | `{"move": "up" \| "down" \| "left" \| "right"}` |
+| `end(game_state)` | `POST /end` | uma vez, no fim da partida | nada |
 
-### The files 📁
-The project is divided in 2 folders: **src** and **tests**.
-In src you can find the main.py file, which is the file that contains the FastAPI app and the routes. From there you can create your own routes and functions.
-The tests folder contains the tests for the project. You can create your own tests and run them using pytest.
+A cobra já vem com a lógica que **impede ela de andar para trás**. A partir daí,
+os `TODO` em `move()` marcam os próximos passos:
 
-### The routes 🛣
-The routes are created in **main.py** file. You can create your own routes and functions. The routes are created using FastAPI decorators, you can find the documentation [here](https://fastapi.tiangolo.com/tutorial/first-steps/). Follow the rules from Battlesnake documentation to create your routes, they should look like [this](https://docs.battlesnake.com/api).
+1. não sair do tabuleiro
+2. não bater no próprio corpo
+3. não bater nas cobras adversárias
+4. ir atrás da comida em vez de sortear a direção
 
-### Atention 🚨
-In order to deploy your Battlesnake in AWS Lambda, you need to follow some rules:
-- The routes must be created using FastAPI decorators;
-- Don't use complete import, only relative ones. (eg: from .move_function import move);
-- ALWAYS test your code before pushing it to the repo. You can use pytest to test your code;
-- Don't forget to create your own tests;
-- Make sure there is a \_\_init\_\_.py file each directory, otherwise it's not a Python package;
-- Every file should be inside the app folder;
+Documentação oficial da API: <https://docs.battlesnake.com/api>
+Exemplo do JSON recebido: <https://docs.battlesnake.com/api/example-move>
 
-### Deploy 🚀
+> ⏱️ Você tem cerca de **500 ms** por jogada. Se estourar, o servidor escolhe
+> uma direção qualquer por você — normalmente para a morte.
 
-![FastApi AWS drawio](https://github.com/Maua-Dev/battlesnake_fastapi_template/assets/81604963/68026cf1-14de-4ca9-bd50-61688556b581)
+> 🧭 O tabuleiro tem a origem `(0, 0)` no **canto inferior esquerdo**: `x` cresce
+> para a direita e `y` cresce para cima.
 
+---
 
-After pushing your code to the repo, it will trigger an action to deploy your code in AWS Lambda. You can find the action in the **.github/workflows/aws_cd.yml** file.
+## 🧪 Testando
 
-In the first time you push your code, the action will create a new stack in AWS CloudFormation. After that, every time you push your code, the action will update the stack with the new code.
+```bash
+pytest
+```
 
-In the [Actions](https://github.com/Maua-Dev/battlesnake_fastapi_template/actions) tab you can see the status of the deploy, and if it was successful or not. If it was successful, you can find the URL of your API in the outputs tab of the action (in the final part of the "Deploy with CDK" step).
+O template já vem com testes que garantem que a sua cobra **sempre devolve uma
+direção válida** e **nunca volta por cima do próprio pescoço**, além de testes
+de integração das rotas. Escreva mais testes conforme for implementando os
+passos acima.
 
+> 🚨 Os testes rodam no GitHub Actions **antes** do deploy. Se algum falhar, o
+> deploy não acontece e a URL da sua cobra não é atualizada.
 
-![Action Tab](https://github.com/Maua-Dev/battlesnake_fastapi_template/assets/81604963/ca447b23-e4f3-423c-8ba2-3f7c891849c9)
-![CD](https://github.com/Maua-Dev/battlesnake_fastapi_template/assets/81604963/1340c269-f182-46eb-ae12-1d0bdd6059a2)
-![STEP](https://github.com/Maua-Dev/battlesnake_fastapi_template/assets/81604963/6129f465-a54d-46fc-b45a-c8b219a6823b)
+### Rodando localmente
 
-There you can find your API URL. You can use this URL to create your Battlesnake in the Battlesnake website. You can find the documentation [here](https://docs.battlesnake.com/guides/getting-started#step-2-create-a-battlesnake).
-You can also find an user and password to access the AWS Console and view the logs of the lambda function to debug it.
+```bash
+uvicorn src.main:app --reload
+```
 
-![Outputs](https://github.com/Maua-Dev/battlesnake_fastapi_template/assets/81604963/e06bf1dd-18cc-4057-91ea-3ccd8074848f)
+Sobe a aplicação em `http://127.0.0.1:8000`. Em outro terminal:
 
+```bash
+curl http://127.0.0.1:8000/
+```
 
-To login in the AWS Console, click in the link name "console" on the output, and then click in "Sign in to a different account". There you need to put the account id and the user and password from the outputs tab. On your login you are required to change your password, DON'T FORGET THE NEW ONE. After that you can click in the link to lambda console, and click monitor to find the logs.
+O FastAPI ainda gera uma documentação interativa em
+`http://127.0.0.1:8000/docs`, onde dá para disparar as rotas pelo navegador.
 
-![Lambda Console](https://github.com/Maua-Dev/battlesnake_fastapi_template/assets/81604963/8a584df8-9efe-432d-9083-6f3523b7f58c)
-![Cloudwatch Logs](https://github.com/Maua-Dev/battlesnake_fastapi_template/assets/81604963/94483cd1-ae3c-46c0-86df-d8fff0b0490e)
+---
 
-After finishing your project, you can delete it from our backend using our CD.
+## ☁️ Deploy
 
-![AwsDestroy](https://github.com/Maua-Dev/battlesnake_fastapi_template/assets/81604963/68a73993-c55e-4ba8-8bf9-2becbc9decf6)
+O deploy é disparado por push na branch **`dev`**:
 
-## Useful tools 🛠
+```bash
+git add .
+git commit -m "minha cobra agora desvia das paredes"
+git push origin dev
+```
 
-- [Postman](https://www.postman.com/) - API development environment
-- [FastAPI](https://fastapi.tiangolo.com/) - Web framework
-- [Python3.9](https://docs.python.org/3.9/) - Python Documentation
-- [Battlesnake](https://docs.battlesnake.com/) - Battlesnake Documentation
+O que o CD faz, nessa ordem:
 
-## Thanks 👢🍿
+1. **ExecuteTests** — roda `pytest`
+2. **Bootstrap** — garante o bucket S3 que guarda o estado do Terraform
+3. **build_python** — instala as dependências para **arm64** e empacota
+   `src/` + bibliotecas num zip
+4. **deploy_app** — `terraform apply`, criando a Lambda e o API Gateway
 
-We hope you like and enjoy it! Thanks!
+No fim, o resumo da execução mostra a **URL da sua cobra** e um link para os
+logs no CloudWatch. Você também encontra a URL no output `api_url_base` do
+passo *Terraform Apply*.
 
-## Contributors 💰🤝💰
+---
 
-This project was developed to use inside Dev. Community Mauá, but feel free to help!.
+## 🎯 Cadastrando no Battlesnake
 
-- Bruno Vilardi - [Brvilardi](https://github.com/Brvilardi) 👷‍♂️
-- Hector Guerrini - [hectorguerrini](https://github.com/hectorguerrini) 🧙‍♂️
-- João Branco - [JoaoVitorBranco](https://github.com/JoaoVitorBranco) 😎
-- Luigi Trevisan - [LuigiTrevisan](https://github.com/LuigiTrevisan) 🔙 
-- Vitor Soller - [VgsStudio](https://github.com/VgsStudio) 🌞
+1. Entre em [play.battlesnake.com](https://play.battlesnake.com)
+2. **My Battlesnakes** → **Create Battlesnake**
+3. No campo **URL**, cole a URL do deploy
+   (algo como `https://abc123.execute-api.us-east-1.amazonaws.com/dev`)
+4. Salve e mande ver nos jogos e desafios!
 
-## Contact us 📞
-If you have any questions, feel free to contact us! You can find us in our [Discord](https://discord.gg/Yr2VPgAmcb) server.
+Se o site reclamar da URL, teste antes no terminal:
+
+```bash
+curl https://SUA_URL_AQUI/
+```
+
+Deve responder o JSON do `info()`.
+
+---
+
+## 📌 Observações
+
+- Toda a lógica da partida vive em `move()`.
+- **Evite adicionar dependências pesadas.** Elas vão inteiras para o zip da
+  Lambda, que tem limite de 50 MB. O pacote atual usa cerca de 14 MB.
+- A Lambda roda em **arm64**, e o CD instala as dependências já compiladas para
+  essa arquitetura. Se você adicionar uma biblioteca com código nativo que não
+  tenha wheel `manylinux2014_aarch64`, o build vai falhar — prefira bibliotecas
+  em Python puro.
+- Os logs ficam no **CloudWatch**, com retenção de 14 dias. Tudo que você
+  escrever com `print` aparece lá.
+- A branch de deploy é **`dev`**. Push em outras branches roda só os testes.
+
+---
+
+## 🛠 Ferramentas úteis
+
+- [Battlesnake Docs](https://docs.battlesnake.com/) — documentação da API
+- [FastAPI](https://fastapi.tiangolo.com/) — o framework das rotas
+- [Mangum](https://mangum.fastapiexpert.com/) — adaptador do FastAPI para Lambda
+- [Postman](https://www.postman.com/) — testar requisições sem terminal
+- [Python 3.12](https://docs.python.org/3.12/) — documentação da linguagem
+
+---
+
+## 📞 Fale com a gente
+
+Dúvidas? Chama no [Discord](https://discord.gg/Yr2VPgAmcb) da Dev. Community Mauá.
