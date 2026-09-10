@@ -80,12 +80,30 @@ def get_move(state: GameState) -> MoveResponse:
             # pescoço acima da cabeça -> não suba
             is_move_safe["up"] = False
 
-    # TODO: Passo 1 — impedir que a cobra saia do tabuleiro
-    # board_width = state.board.width
-    # board_height = state.board.height
+    # 2. Impedir que a cobra saia do tabuleiro (paredes)
+    board_width = state.board.width
+    board_height = state.board.height
 
-    # TODO: Passo 2 — impedir que a cobra bata no próprio corpo
-    # my_body = state.you.body
+    if my_head.x + 1 >= board_width:
+        is_move_safe["right"] = False
+    if my_head.x - 1 < 0:
+        is_move_safe["left"] = False
+    if my_head.y + 1 >= board_height:
+        is_move_safe["up"] = False
+    if my_head.y - 1 < 0:
+        is_move_safe["down"] = False
+
+    # 3. Impedir que a cobra bata no próprio corpo
+    my_body = state.you.body
+    for segment in my_body:
+        if segment.x == my_head.x + 1 and segment.y == my_head.y:
+            is_move_safe["right"] = False
+        if segment.x == my_head.x - 1 and segment.y == my_head.y:
+            is_move_safe["left"] = False
+        if segment.x == my_head.x and segment.y == my_head.y + 1:
+            is_move_safe["up"] = False
+        if segment.x == my_head.x and segment.y == my_head.y - 1:
+            is_move_safe["down"] = False
 
     # TODO: Passo 3 — impedir que a cobra bata nas adversárias
     # opponents = state.board.snakes
