@@ -1,42 +1,47 @@
-import random
+"""Ponte entre o AWS Lambda e a lógica da sua cobra.
+
+Você NÃO precisa mexer aqui. Este arquivo define os endpoints FastAPI e
+repassa as chamadas para logic.py.
+
+Rotas da API (https://docs.battlesnake.com/api):
+  GET  /        -> aparência da cobra
+  POST /start   -> a partida começou
+  POST /move    -> escolha a jogada deste turno
+  POST /end     -> a partida acabou
+"""
 from fastapi import FastAPI
 from mangum import Mangum
+from . import logic
+from .models import GameState, MoveResponse
 
 app = FastAPI()
 
-# GET / - info about the snake (https://docs.battlesnake.com/api/requests/info)
-# POST /start - start the game (https://docs.battlesnake.com/api/requests/start)
-# POST /move - move the snake (https://docs.battlesnake.com/api/requests/move)
-# POST /end - end the game (https://docs.battlesnake.com/api/requests/end)
 
 @app.get("/")
-def read_root():
-    return {
-        "apiversion": "1",
-        "author": "Maua-Dev",
-        "color": "#8B0000",
-        "head": "tiger-king",
-        "tail": "hook",
-        "version": "1.0.0"
-    }
+def read_root() -> dict:
+    """GET / — informações e aparência da cobra."""
+    return logic.info()
 
-@app.post("/start") 
-def start():
+
+@app.post("/start")
+def start(state: GameState) -> str:
+    """POST /start — chamado no início de cada partida."""
+    logic.start(state)
     return "ok"
+
 
 @app.post("/move")
-def move(request: dict):
-    print(request)
-    i = random.randint(0, 3)
-    directions = ["up", "down", "left", "right"]
-    response = {
-        "move": directions[i],
-        "shout": f"I'm moving {directions[i]}!"
-    }
-    return response
+def move(state: GameState) -> MoveResponse:
+    """POST /move — chamado a cada turno. Chama a lógica da cobra."""
+    return logic.get_move(state)
+
 
 @app.post("/end")
-def end():
+def end(state: GameState) -> str:
+    """POST /end — chamado no fim de cada partida."""
+    logic.end(state)
     return "ok"
 
+
+# Handler para AWS Lambda via Mangum
 handler = Mangum(app, lifespan="off")
