@@ -1,3 +1,5 @@
 mangum==0.22.0
 fastapi==0.141.1
-pydantic==2.9.2
+# Piso, e nao pin: o pydantic-core e compilado e so publica wheels ate a
+# versao de Python vigente. O 2.9.2 nao instala no Python 3.14+.
+pydantic>=2.12

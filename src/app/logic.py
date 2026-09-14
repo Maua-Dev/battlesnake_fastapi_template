@@ -17,6 +17,9 @@ import logging
 from .models import GameState, MoveResponse
 
 logger = logging.getLogger(__name__)
+# O runtime Python da Lambda deixa o logger raiz em WARNING: sem esta linha
+# as jogadas nao aparecem no CloudWatch.
+logger.setLevel(logging.INFO)
 
 
 def info() -> dict:

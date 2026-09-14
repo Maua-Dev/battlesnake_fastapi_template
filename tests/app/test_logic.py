@@ -71,13 +71,13 @@ def test_nunca_volta_contra_pescoco(neck, proibida):
         assert result.move != proibida, f"a cobra voltou contra o pescoço ({proibida})"
 
 
-# T4 — evita parede quando tem opção (os TODOs ainda não estão implementados,
-# então este teste verifica só que a função retorna sem erros)
-def test_retorna_direcao_valida_na_borda():
+# T4 — evita a parede: cabeça em (0,0) com o pescoço à direita.
+# left sai do tabuleiro (x=-1), down também (y=-1) e right volta pelo pescoço,
+# então "up" é a única saída possível.
+def test_evita_parede_na_borda():
     state = make_state((0, 0), (1, 0))
     for _ in range(20):
-        result = get_move(state)
-        assert result.move in DIRECOES
+        assert get_move(state).move == "up"
 
 
 # T6 — sem safe moves -> retorna direção válida sem lançar exceção
