@@ -128,5 +128,5 @@ def get_move(state: GameState) -> MoveResponse:
     # TODO: Passo 4 — ir atrás da comida em vez de sortear, para não morrer de fome
     # food = state.board.food
 
-    logger.info("MOVE %d: %s", state.turn, chosen)
+    logger.debug("MOVE %d: %s", state.turn, chosen)
     return MoveResponse(move=chosen)

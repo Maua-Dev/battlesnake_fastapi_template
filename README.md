@@ -8,7 +8,7 @@ você programa, dá push, e o GitHub Actions devolve a URL da sua cobra.
 
 ## 📦 Pré-requisitos
 
-- **Python 3.12 ou superior** — [python.org](https://www.python.org/downloads/)
+- **Python 3.13 ou superior** — [python.org](https://www.python.org/downloads/)
   Confira com `python --version`.
 - Noções básicas de **Python**, **API** e **Lambda**
 - **Disposição, competitividade e força de vontade!**
