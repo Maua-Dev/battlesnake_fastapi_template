@@ -38,6 +38,12 @@ jobs:
         with:
           python-version: '3.13'
 
+      - name: Run Tests
+        run: |
+          pip install -r requirements.txt
+          pip install -r requirements-dev.txt
+          pytest
+
       - name: Installing Dependencies to Deploy
         run: |
           npm install -g aws-cdk@2.1140.0
