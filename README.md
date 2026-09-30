@@ -112,6 +112,8 @@ Documentação oficial da API: <https://docs.battlesnake.com/api>
 
 ---
 
+Deploy (branch `dev`, region `sa-east-1`) uses scoped OIDC via repo secret `AWS_DEPLOY_ROLE_ARN` (role `gha-battlesnake-{repo}`, expires 2026-10-12) plus `AWS_ACCOUNT_ID_DEV`. Resources are named `battlesnake-{repo}-*`.
+
 ## 🧪 Testando
 
 ```bash

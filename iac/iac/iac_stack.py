@@ -2,6 +2,7 @@ import os
 from aws_cdk import (
     Duration,
     Stack,
+    aws_iam as iam,
     aws_lambda as _lambda,
     CfnOutput,
 )
@@ -18,14 +19,35 @@ class IacStack(Stack):
 
         self.project_name = os.environ.get("PROJECT_NAME")
         self.aws_account_id = os.environ.get("AWS_ACCOUNT_ID_DEV")
+        self.repo_name = os.environ.get("REPO_NAME")
+
+        lambda_role = iam.Role(
+            self,
+            "BattleSnakeLambdaRole",
+            role_name=f"battlesnake-{self.repo_name}-role-dev",
+            path="/battlesnake/",
+            assumed_by=iam.ServicePrincipal("lambda.amazonaws.com"),
+            managed_policies=[
+                iam.ManagedPolicy.from_aws_managed_policy_name(
+                    "service-role/AWSLambdaBasicExecutionRole"
+                )
+            ],
+            permissions_boundary=iam.ManagedPolicy.from_managed_policy_arn(
+                self,
+                "PermissionsBoundary",
+                f"arn:aws:iam::{self.aws_account_id}:policy/pb-battlesnake-participant",
+            ),
+        )
 
         lambda_fn = _lambda.Function(
             self,
             "BattleSnakeLambda",
+            function_name=f"battlesnake-{self.repo_name}-lambda-dev",
             runtime=_lambda.Runtime.PYTHON_3_13,
             code=_lambda.Code.from_asset("../src"),
             handler="app.main.handler",
             timeout=Duration.seconds(15),
+            role=lambda_role,
         )
 
         lambda_url = lambda_fn.add_function_url(
@@ -35,7 +57,9 @@ class IacStack(Stack):
         alarm = lambda_fn.metric_invocations(
             period=Duration.hours(6),
         ).create_alarm(
-            self, self.project_name + "LambdaAlarm",
+            self,
+            "BattleSnakeLambdaAlarm",
+            alarm_name=f"battlesnake-{self.repo_name}-alarm-dev",
             threshold=5000,
             evaluation_periods=1,
             comparison_operator=ComparisonOperator.GREATER_THAN_OR_EQUAL_TO_THRESHOLD,

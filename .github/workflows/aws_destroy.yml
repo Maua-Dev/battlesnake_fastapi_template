@@ -17,7 +17,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-region: sa-east-1
-          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID_DEV }}:role/GithubActionsRole
+          role-to-assume: ${{ secrets.AWS_DEPLOY_ROLE_ARN }}
           role-session-name: github-action
 
       - uses: actions/setup-python@v5
@@ -27,12 +27,10 @@ jobs:
       - name: Setting stage and stack name
         run: |
           echo "STAGE=dev"
-          PROJECT_NAME=$(echo ${{ github.event.repository.name }} | sed -e 's/[-_]/ /g' | awk '{for(i=1;i<=NF;i++)sub(/./,toupper(substr($i,1,1)),$i)}1' | sed -e 's/ //g')
-          echo "PROJECT_NAME=${PROJECT_NAME}"
-          echo "STACK_NAME=${PROJECT_NAME}StackBattlesnakedev"
-
-          echo "STACK_NAME=${PROJECT_NAME}StackBattlesnakedev" >> $GITHUB_ENV
-          echo "PROJECT_NAME=${PROJECT_NAME}Battlesnake" >> $GITHUB_ENV
+          REPO=${{ github.event.repository.name }}
+          echo "REPO_NAME=${REPO}" >> $GITHUB_ENV
+          echo "STACK_NAME=battlesnake-${REPO}-dev" >> $GITHUB_ENV
+          echo "PROJECT_NAME=battlesnake-${REPO}" >> $GITHUB_ENV
 
       - name: Setup envs
         run: |
