@@ -81,13 +81,3 @@ class IacStack(Stack):
             value=lambda_url.url,
             export_name=self.project_name + "UrlValue",
         )
-
-        CfnOutput(
-            self,
-            self.project_name + "LambdaConsole",
-            value=(
-                f"https://{self.region}.console.aws.amazon.com/lambda/home"
-                f"?region={self.region}#/functions/{lambda_fn.function_name}?tab=monitoring"
-            ),
-            export_name=self.project_name + "LambdaConsoleValue",
-        )
