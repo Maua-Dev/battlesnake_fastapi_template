@@ -25,7 +25,6 @@ class IacStack(Stack):
             self,
             "BattleSnakeLambdaRole",
             role_name=f"battlesnake-{self.repo_name}-role-dev",
-            path="/battlesnake/",
             assumed_by=iam.ServicePrincipal("lambda.amazonaws.com"),
             managed_policies=[
                 iam.ManagedPolicy.from_aws_managed_policy_name(
