@@ -19,12 +19,15 @@ class IacStack(Stack):
 
         self.project_name = os.environ.get("PROJECT_NAME")
         self.aws_account_id = os.environ.get("AWS_ACCOUNT_ID_DEV")
-        self.repo_name = os.environ.get("REPO_NAME")
+        self.repo_slug = (
+            os.environ.get("REPO_SLUG")
+            or (os.environ.get("REPO_NAME") or "unknown").replace("_", "-")
+        )
 
         lambda_role = iam.Role(
             self,
             "BattleSnakeLambdaRole",
-            role_name=f"battlesnake-{self.repo_name}-role-dev",
+            role_name=f"battlesnake-{self.repo_slug}-role-dev",
             assumed_by=iam.ServicePrincipal("lambda.amazonaws.com"),
             managed_policies=[
                 iam.ManagedPolicy.from_aws_managed_policy_name(
@@ -41,7 +44,7 @@ class IacStack(Stack):
         lambda_fn = _lambda.Function(
             self,
             "BattleSnakeLambda",
-            function_name=f"battlesnake-{self.repo_name}-lambda-dev",
+            function_name=f"battlesnake-{self.repo_slug}-lambda-dev",
             runtime=_lambda.Runtime.PYTHON_3_13,
             code=_lambda.Code.from_asset("../src"),
             handler="app.main.handler",
@@ -58,7 +61,7 @@ class IacStack(Stack):
         ).create_alarm(
             self,
             "BattleSnakeLambdaAlarm",
-            alarm_name=f"battlesnake-{self.repo_name}-alarm-dev",
+            alarm_name=f"battlesnake-{self.repo_slug}-alarm-dev",
             threshold=5000,
             evaluation_periods=1,
             comparison_operator=ComparisonOperator.GREATER_THAN_OR_EQUAL_TO_THRESHOLD,

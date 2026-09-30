@@ -28,9 +28,11 @@ jobs:
         run: |
           echo "STAGE=dev"
           REPO=${{ github.event.repository.name }}
+          REPO_SLUG=${REPO//_/-}
           echo "REPO_NAME=${REPO}" >> $GITHUB_ENV
-          echo "STACK_NAME=battlesnake-${REPO}-dev" >> $GITHUB_ENV
-          echo "PROJECT_NAME=battlesnake-${REPO}" >> $GITHUB_ENV
+          echo "REPO_SLUG=${REPO_SLUG}" >> $GITHUB_ENV
+          echo "STACK_NAME=battlesnake-${REPO_SLUG}-dev" >> $GITHUB_ENV
+          echo "PROJECT_NAME=battlesnake-${REPO_SLUG}" >> $GITHUB_ENV
 
       - name: Setup envs
         run: |
